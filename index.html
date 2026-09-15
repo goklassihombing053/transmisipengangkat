@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Transmisi Pengangkat (Double Speed Reducer)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0d1b2a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #1b263b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #e0e1dd;
+        }
+        h1 {
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #4cc9f0;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card {
+            background-color: #415a77;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #e0e1dd;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #778da9;
+            border-radius: 6px;
+            background-color: #0d1b2a;
+            color: #fff;
+            font-size: 1em;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4cc9f0;
+        }
+        .result-box {
+            background-color: #0d1b2a;
+            border-left: 5px solid #4cc9f0;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+        .result-title {
+            color: #4cc9f0;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .formula-card {
+            background-color: #2b4c7e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #4cc9f0;
+        }
+        .formula {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #ffdd57;
+            margin: 10px 0;
+        }
+        .note {
+            font-size: 0.85em;
+            color: #778da9;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kalkulator Transmisi Pengangkat</h1>
+    <div class="subtitle">Example: Double Speed Reducer</div>
+
+    <div class="grid">
+        <!-- Input Section -->
+        <div class="card">
+            <h2>Parameter Input</h2>
+            
+            <div class="form-group">
+                <label for="n1">Kecepatan Engine / Input (n1) [rpm]:</label>
+                <input type="number" id="n1" value="500" oninput="calculate()">
+            </div>
+
+            <div class="form-group">
+                <label for="N1">Jumlah Gigi Gear 1 (N1) [gigi]:</label>
+                <input type="number" id="N1" value="20" oninput="calculate()">
+            </div>
+
+            <div class="form-group">
+                <label for="N2">Jumlah Gigi Gear 2 (N2) [gigi]:</label>
+                <input type="number" id="N2" value="70" oninput="calculate()">
+            </div>
+
+            <div class="form-group">
+                <label for="N3">Jumlah Gigi Gear 3 (N3) [gigi]:</label>
+                <input type="number" id="N3" value="18" oninput="calculate()">
+            </div>
+
+            <div class="form-group">
+                <label for="N4">Jumlah Gigi Gear 4 (N4) [gigi]:</label>
+                <input type="number" id="N4" value="54" oninput="calculate()">
+            </div>
+
+            <hr style="border-color: #778da9; margin: 20px 0;">
+
+            <div class="form-group">
+                <label for="P">Daya Motor / Engine (P) [kW] (Opsional):</label>
+                <input type="number" id="P" placeholder="Contoh: 10" oninput="calculate()">
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="card">
+            <h2>Hasil Perhitungan</h2>
+
+            <div class="result-box">
+                <div class="result-title">1. Kecepatan Poros Antara (n2 = n3):</div>
+                <div class="result-value" id="res_n2">142.86 rpm</div>
+                <div class="note">Rumus: n1 × (N1 / N2)</div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-title">2. Kecepatan Drum Hoist (n4):</div>
+                <div class="result-value" id="res_n4" style="color: #4cc9f0;">47.62 rpm</div>
+                <div class="note">Rumus: n2 × (N3 / N4)</div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-title">3. Total Rasio Reduksi:</div>
+                <div class="result-value" id="res_reduction">10.5 : 1</div>
+                <div class="note">Rumus: n1 / n4</div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-title">4. Torsi Output pada Drum (T4):</div>
+                <div class="result-value" id="res_torque" style="color: #ffdd57;">- Nm</div>
+                <div class="note">Rumus: T = 9550 × (P / n4)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rumus Card -->
+    <div class="formula-card">
+        <h3>Rumus Torsi Utama</h3>
+        <div class="formula">T = 9550 × ( P / n )</div>
+        <div>Dengan <b>T</b> : torsi (Nm), <b>P</b> : daya (kW), dan <b>n</b> : putaran (rpm)</div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        // Ambil nilai dari input
+        const n1 = parseFloat(document.getElementById('n1').value) || 0;
+        const N1 = parseFloat(document.getElementById('N1').value) || 0;
+        const N2 = parseFloat(document.getElementById('N2').value) || 0;
+        const N3 = parseFloat(document.getElementById('N3').value) || 0;
+        const N4 = parseFloat(document.getElementById('N4').value) || 0;
+        const P  = parseFloat(document.getElementById('P').value) || 0;
+
+        // Validasi agar tidak ada pembagian dengan nol
+        if (N2 === 0 || N4 === 0 || n1 === 0) {
+            document.getElementById('res_n2').innerText = "Input tak valid";
+            document.getElementById('res_n4').innerText = "Input tak valid";
+            document.getElementById('res_reduction').innerText = "Input tak valid";
+            document.getElementById('res_torque').innerText = "- Nm";
+            return;
+        }
+
+        // Langkah 1: n2 = n1 * (N1 / N2)
+        const n2 = n1 * (N1 / N2);
+        
+        // Langkah 2: n3 = n2
+        const n3 = n2;
+
+        // Langkah 3: n4 = n3 * (N3 / N4)
+        const n4 = n3 * (N3 / N4);
+
+        // Langkah 4: Total Reduksi = n1 / n4
+        const reductionRatio = n1 / n4;
+
+        // Tampilkan Hasil Kecepatan & Rasio Reduksi
+        document.getElementById('res_n2').innerText = n2.toFixed(2) + " rpm";
+        document.getElementById('res_n4').innerText = n4.toFixed(2) + " rpm";
+        document.getElementById('res_reduction').innerText = reductionRatio.toFixed(2) + " : 1";
+
+        // Torsi (jika daya P dimasukkan)
+        if (P > 0 && n4 > 0) {
+            const T4 = 9550 * (P / n4);
+            document.getElementById('res_torque').innerText = T4.toFixed(2) + " Nm";
+        } else {
+            document.getElementById('res_torque').innerText = "Masukkan Daya (P)";
+        }
+    }
+
+    // Jalankan kalkulasi pertama kali saat halaman dimuat
+    calculate();
+</script>
+
+</body>
+</html>
